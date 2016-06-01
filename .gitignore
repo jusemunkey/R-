@@ -1,11 +1,18 @@
-# History files
-.Rhistory
 
-# Example code in package build process
-*-Ex.R
+#An excample of the Newton-Raphson method for solving non-linear system of equations.
 
-# R data files from past sessions
-.Rdata
+H<-function(a,b){matrix(c(-exp(-a),exp(a-a^2)+a*(1-2*a)*exp(a-a^2),exp(-b),-exp(b-b^2)-b*(1-2*b)*exp(b-b^2)),nrow=2,ncol=2)}
+f <- function(a,b){matrix(c(exp(-a)-exp(-b)-0.05,a*exp(a-a^2)-b*exp(b-b^2)),nrow=2)}
 
-# RStudio files
-.Rproj.user/
+NRmethod <- function(a,b){
+  x <- c(a,b)
+  repeat{
+    newvalue <- x - solve(H(x[1],x[2]))%*%f(x[1],x[2])
+    error <- newvalue - x
+    x <- newvalue
+    if((abs(error[1])<0.00001)&(abs(error[2])<0.00001))break
+  }
+  list(a=newvalue[1],b=newvalue[2])
+}  
+
+NRmethod(.5,1.5)
